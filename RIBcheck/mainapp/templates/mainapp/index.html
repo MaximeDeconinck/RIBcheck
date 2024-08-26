@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'mainapp/index.css' %}">
+    <title>RIBcheck</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'mainapp:index' %}"><img src="{% static 'mainapp/logoecho.png' %}"></a></li>
+            <li><a href="{% url 'mainapp:checklist' %}">Check list</a></li>
+            <div class="profile">
+                {% if user.is_authenticated %}
+                    {% if user.is_superuser %}
+                        <li><a href="{% url 'mainapp:newuser' %}">New user</a></li>
+                        <li><a href="{% url 'mainapp:logs' %}">Logs</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'mainapp:profile' %}">{{ user.username }}</a></li>
+                {% else %}
+                    <li><a href="{% url 'mainapp:login' %}">Log in</a></li>
+                    <li><a href="{% url 'mainapp:register' %}">Register</a></li>
+                {% endif %}
+            </div>
+        </ul>
+    </nav>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="content">
+        {% if request.get_full_path == "/" %}
+            <h1>RIBcheck</h1>
+            <h3>To do :</h3>
+            Generate random accounts from admin view -> When account created, random RIB generated<br>
+            Generate RIB and trigger the hash computing and storage<br>
+            Create a testing view for users<br>
+            Each time a RIB check is launched, track the calculation and checking on the admin side<br>
+            Return the result of the checking<br>
+        {% else %}
+            {% block content %}
+            {% endblock %}
+        {% endif %}
+    </div>
+</body>
+</html>
